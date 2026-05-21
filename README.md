@@ -1,0 +1,2 @@
+# VLM-QWEN
+Source code for VLM Qwen VL 7B (AGX ORIN , OAK-D PRO WIDE CAMERA) 
