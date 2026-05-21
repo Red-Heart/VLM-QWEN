@@ -108,3 +108,55 @@ PyTorch	CUDA-enabled
 Transformers	HuggingFace   
 OpenCV	Python OpenCV  
 RViz2	ROS2 visualization_   
+
+Running the System  
+**1. Source ROS2  **
+Open terminal:   
+    
+source /opt/ros/humble/setup.bash    
+   
+**2. Build Workspace**
+   
+cd ~/vlm_ws  
+colcon build   
+source install/setup.bash   
+  
+**Launch Sequence    **
+**Terminal 1 **— Start OAK-D Camera  
+source /opt/ros/humble/setup.bash
+ros2 launch depthai_ros_driver camera.launch.py
+   
+Check topics:  
+  
+ros2 topic list | grep oak  
+    
+**Terminal 2 **— Start Qwen7B VLM Node   
+source /opt/ros/humble/setup.bash   
+source ~/vlm_ws/install/setup.bash   
+ros2 run oak_vlm_pipeline qwen7b_vlm_node     
+   
+**Terminal 3 **— Start Bounding Box Visualizer  
+source /opt/ros/humble/setup.bash  
+source ~/vlm_ws/install/setup.bash  
+ros2 run oak_vlm_pipeline qwen_bbox_visualizer  
+  
+**Terminal 4 **— Start Depth Fusion Node  
+source /opt/ros/humble/setup.bash  
+source ~/vlm_ws/install/setup.bash   
+ros2 run oak_vlm_pipeline bbox_depth_xyz_node  
+  
+**Terminal 5 **— Open RViz2  
+source /opt/ros/humble/setup.bash  
+rviz2  
+  
+Add Image display.  
+  
+Select topic:
+  
+/vlm/qwen7b_bbox_image  
+Viewing Detection Output  
+Echo semantic detections  
+ros2 topic echo /vlm/qwen7b_detections --full-length  
+Echo depth and XYZ output  
+ros2 topic echo /vlm/object_depth_xyz --full-length  
+
